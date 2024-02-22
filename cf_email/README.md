@@ -6,6 +6,9 @@
 * submit the form
 	* Must use a valid "To" address (no form validation yet)
 
+# Next Steps
+* Add attachments
+* Add CC/BCC fields
 
 REF : 
 * https://aws.amazon.com/blogs/containers/running-adobe-coldfusion-applications-on-amazon-ecs-with-blue-green-deployments/
