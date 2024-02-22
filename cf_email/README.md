@@ -4,7 +4,7 @@
 * docker-compose up
 * navigate to http://localhost:8500/
 * submit the form
-** Must use a valid "To" address (no form validation yet)
+	* Must use a valid "To" address (no form validation yet)
 
 
 REF : 
