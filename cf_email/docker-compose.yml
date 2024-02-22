@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  coldfusion:
+    # image: adobecoldfusion/coldfusion:latest
+    image: adobecoldfusion/coldfusion2021:2021.0.5
+    ports:
+      - 8500:8500
+    environment:
+      acceptEULA: YES
+      password: "admin"
+      installModules: "mail:2021.0.05.330109"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - "mailhog"
+    # command: 'whoami'
+
+  # Our SMTP server.
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      # - "1025:1025" # SMTP server that ColdFusion will send mail to.
+      - "8025:8025" # Web UI that developers can access to check sent-mail.
