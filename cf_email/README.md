@@ -2,9 +2,17 @@
 * Checkout the repo code
 * cd cf_email
 * docker-compose up
-* navigate to http://localhost:8500/
-* submit the form
-	* Must use a valid "To" address (no form validation yet)
+* DB Connections
+    * Local DB (defined in the docker-compose as "sql")
+		* open the CF Admin and add the MSSQL data source
+	* DB-PROC-4
+		* 
+
+# Usage
+* Email Test
+    * navigate to http://localhost/
+    * submit the form
+	    * Must use a valid "To" address (no form validation yet)
 
 # Next Steps
 * Add attachments

@@ -1,24 +1,69 @@
-version: '3.3'
+version: "3.7"
 services:
 
-  coldfusion:
-    # image: adobecoldfusion/coldfusion:latest
-    image: adobecoldfusion/coldfusion2021:2021.0.5
+  sql:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sql
+    hostname: sql
+    networks:
+      - network
     ports:
-      - 8500:8500
-    environment:
-      acceptEULA: YES
-      password: "admin"
-      installModules: "mail:2021.0.05.330109"
+      - "1433:1433"
     volumes:
-      - ./app:/app
-    depends_on:
-      - "mailhog"
-    # command: 'whoami'
+      - "mssqldata:/var/opt/mssql"
+      - "./data:/data"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SQLS3rv3r
+      - MSSQL_AGENT_ENABLED=true
+      - MSSQL_PID=Express
+    entrypoint:
+      - /bin/bash
+      - /data/entrypoint.sh
+    command: ["/opt/mssql/bin/sqlservr"]
 
-  # Our SMTP server.
+  # SMTP server
   mailhog:
     image: mailhog/mailhog
+    # container_name: mailhog
+    # hostname: mailhog
+    networks:
+      - network
     ports:
       # - "1025:1025" # SMTP server that ColdFusion will send mail to.
       - "8025:8025" # Web UI that developers can access to check sent-mail.
+
+  # Web Server
+  coldfusion:
+    # image: adobecoldfusion/coldfusion:latest
+    image: adobecoldfusion/coldfusion2021:2021.0.5
+    container_name: coldfusion
+    hostname: coldfusion
+    networks:
+      - network
+    volumes:
+      - "./app:/app"
+      - "./data:/data"
+    ports:
+      - 80:8500
+    environment:
+      acceptEULA: YES
+      password: "admin"
+      enableSecureProfile: "false"
+      installModules: "mail:2021.0.05.330109,sqlserver"
+      DATABASE_PUBLIC_URL: sql
+    healthcheck:
+      test: curl -f http://localhost:8500/
+      interval: 1m
+      timeout: 3s
+    depends_on:
+      - mailhog
+      - sql
+    # command: 'whoami'
+
+volumes:
+  mssqldata:
+
+networks:
+  network:
+
